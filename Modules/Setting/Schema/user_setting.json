@@ -1,0 +1,66 @@
+{
+    "type": "object",
+    "default": {
+        "ticket": {
+            "notification": {
+                "broadcast": {
+                    "show": true,
+                    "message": "شما تیکت جدید دریافت کردید"
+                }
+            }
+        },
+        "message": {
+            "notification": {
+                "broadcast": {
+                    "show": true,
+                    "message": "شما پیام جدید دریافت کردید"
+                }
+            }
+        }
+    },
+    "properties": {
+        "ticket": {
+            "type": "object",
+            "properties": {
+                "notification": {
+                    "type": "object",
+                    "properties": {
+                        "broadcast": {
+                            "type": "object",
+                            "properties": {
+                                "show": { "type": "boolean", "default": true },
+                                "message": {
+                                    "type": "string",
+                                    "default": "شما تیکت جدید دریافت کردید"
+                                }
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "message": {
+            "type": "object",
+            "properties": {
+                "notification": {
+                    "type": "object",
+                    "properties": {
+                        "broadcast": {
+                            "type": "object",
+                            "properties": {
+                                "show": { "type": "boolean", "default": true },
+                                "message": {
+                                    "type": "string",
+                                    "default": "شما پیام جدید دریافت کردید"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

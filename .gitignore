@@ -1,0 +1,13 @@
+/bootstrap/cache
+/node_modules
+/public/storage
+/storage/*.key
+/storage/framework
+/mysql/mysql-data
+/storage/logs
+/vendor
+.env
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
