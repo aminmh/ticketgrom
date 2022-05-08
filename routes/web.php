@@ -20,16 +20,5 @@ Route::get('/', function () {
 });
 
 Route::prefix('user')->group(function () {
-    Route::post('/login', function (Request $request) {
-        try {
-            $user = User::where('username', $request->input('username'))->first();
-
-            auth()->login($user);
-
-            return "logged in";
-
-        } catch (\Throwable $th) {
-            dd($th->getMessage());
-        }
-    });
+    Route::post('/login', [\App\Http\Controllers\AuthController::class, 'signin']);
 });

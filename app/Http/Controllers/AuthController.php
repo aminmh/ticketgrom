@@ -12,6 +12,22 @@ class AuthController extends Controller
     {
     }
 
+    public function signin(\App\Actions\Auth\Authentication $auth)
+    {
+        try {
+
+            $user = $auth->signin();
+
+            return response()->json([
+                'data' => $user
+            ]);
+
+        } catch (\Throwable $th) {
+
+            return response()->json(['message' => $th->getMessage()], 422);
+        }
+    }
+
     public function createRole()
     {
         try {

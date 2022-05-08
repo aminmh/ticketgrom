@@ -3,7 +3,9 @@
 namespace App\Actions\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 
 class Authentication
@@ -13,12 +15,14 @@ class Authentication
     {
     }
 
-    public function signin(bool $remember = false)
+    public function signin()
     {
         $credentials = $this->request->only(['username', 'password']);
 
+        $remember = $this->request->boolean('rememberMe', false);
+
         if (Auth::attempt($credentials, $remember))
-            return $this->doAfterAuthenticate();
+            return Auth::user();
 
         throw new UnauthorizedException(__('messages.INCORRECT_CREDENTILAS', [], 'fa'), 422);
     }
@@ -34,9 +38,8 @@ class Authentication
 
     public function signout()
     {
-    }
+        Auth::logout();
 
-    public function doAfterAuthenticate(): void
-    {
+        Session::flush();
     }
 }
