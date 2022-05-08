@@ -1,6 +1,7 @@
 /bootstrap/cache
 /node_modules
 /public/storage
+/stubs
 /storage/*.key
 /storage/framework
 /mysql/mysql-data

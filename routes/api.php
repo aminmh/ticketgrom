@@ -22,12 +22,14 @@ Route::any('test', function (Request $request) {
 
     try {
         // $notify = \App\Models\Message::find(2);
-        $notify = \App\Models\Ticket::find(2);
-        $notify->markAsFavorite();
-
+        // $notify = \App\Models\Ticket::find(2);
+        // $notify->markAsFavorite();
         // event(new \App\Events\NewMessage($notify));
 
+        $key = $request->query('key');
 
+        dd(config("sms.providers.$key"));
+        
     } catch (\Throwable $th) {
         dd($th);
     }
