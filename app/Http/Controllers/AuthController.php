@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\User\AccessControl;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {

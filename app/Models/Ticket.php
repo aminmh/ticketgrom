@@ -49,6 +49,11 @@ class Ticket extends Model
         'created' => \App\Events\NewTicket::class
     ];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(\App\Models\Scopes\OpenedTickets::class);
+    }
+
     protected static function newFactory()
     {
         return TicketFactory::new();
@@ -103,6 +108,11 @@ class Ticket extends Model
             get: fn ($value) => unserialize($value),
             set: fn ($newValue) => serialize(array_unique(Arr::wrap($newValue), SORT_STRING))
         );
+    }
+
+    public function rank(): Attribute
+    {
+        return Attribute::set(fn ($value) => $value <= 5.0 ? floatval($value) : null);
     }
 
     public function scopeSeen(Builder $query, bool $seen = false)

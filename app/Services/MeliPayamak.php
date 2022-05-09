@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Infrastructure\Contracts\SmsSenderInterface;
-use Illuminate\Support\Collection;
 use Melipayamak\MelipayamakApi;
 
 class MeliPayamak implements SmsSenderInterface
@@ -25,6 +24,7 @@ class MeliPayamak implements SmsSenderInterface
 
     public function send(string $to): bool
     {
+        // Melipayamak implemention...
         return true;
     }
 

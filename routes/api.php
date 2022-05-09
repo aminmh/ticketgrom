@@ -29,7 +29,6 @@ Route::any('test', function (Request $request) {
         $key = $request->query('key');
 
         dd(config("sms.providers.$key"));
-        
     } catch (\Throwable $th) {
         dd($th);
     }
@@ -50,6 +49,9 @@ Route::prefix('user')->group(function () {
         Route::post('add-to-favorite/{ticket}', [\App\Http\Controllers\TicketController::class, 'markAsFavorite']);
         Route::get('favorites', [\App\Http\Controllers\TicketController::class, 'favorites']);
         Route::get('outbox', [\App\Http\Controllers\TicketController::class, 'outbox']);
+        Route::prefix('rank')->group(function () {
+            Route::post('/{ticket}', [\App\Http\Controllers\TicketController::class, 'rank']);
+        });
     });
 
     Route::prefix('message')->group(function () {

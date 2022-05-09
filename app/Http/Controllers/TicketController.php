@@ -51,7 +51,21 @@ class TicketController extends Controller
             $outbox = auth()->user()->tickets()->get();
 
             return response()->json(['data' => $outbox]);
+        } catch (\Throwable $th) {
 
+            dd($th);
+        }
+    }
+
+    public function rank(Request $request, \App\Models\Ticket $ticket)
+    {
+        try {
+
+            $ticket->rank = $request->input('rank', null);
+
+            $ticket->save();
+
+            return response()->json(json_message('SUCCESS'));
         } catch (\Throwable $th) {
 
             dd($th);
