@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 
@@ -51,7 +52,7 @@ class Ticket extends Model
 
     protected static function booted()
     {
-        static::addGlobalScope(\App\Models\Scopes\OpenedTickets::class);
+        static::addGlobalScope(\App\Models\Scopes\OpenTickets::class);
     }
 
     protected static function newFactory()
