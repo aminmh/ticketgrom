@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Repository\Eloquent;
 
-use App\Infrastructure\Contracts\RepositoryInterface;
+use App\Infrastructure\Contracts\Repository\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractRepository implements RepositoryInterface
@@ -15,9 +15,6 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function find(int|array $id)
     {
-        if (is_array($id))
-            return $this->model->findMany($id);
-
         return $this->model->find($id);
     }
 
