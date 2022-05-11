@@ -1,9 +1,12 @@
 <?php
 
+use App\Infrastructure\Contracts\Repository\DepartmentRepositoryInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Setting\Contracts\SettingRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use Modules\Setting\Enums\TicketSetting;
 
@@ -25,11 +28,9 @@ Route::any('test', function (Request $request) {
         // $notify = \App\Models\Ticket::find(2);
         // $notify->markAsFavorite();
         // event(new \App\Events\NewMessage($notify));
-
-        $key = $request->query('key');
-
-        dd(config("sms.providers.$key"));
-    } catch (\Throwable $th) {
+        
+        return app(DepartmentRepositoryInterface::class)->all();
+    } catch (\Exception $th) {
         dd($th);
     }
 })/*->middleware('auth:sanctum')*/;

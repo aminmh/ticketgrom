@@ -19,6 +19,10 @@ class Department extends Model
 
     protected $fillable = ['name', 'visible_for_customers'];
 
+    protected $dispatchesEvents = [
+        'created' => ''
+    ];
+
     public function members()
     {
         return $this->belongsToMany(User::class, 'department_members', 'department_id', 'user_id');

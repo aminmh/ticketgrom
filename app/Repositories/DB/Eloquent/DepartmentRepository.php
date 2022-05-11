@@ -5,6 +5,7 @@ namespace App\Repositories\DB\Eloquent;
 use App\Infrastructure\Contracts\Repository\DepartmentRepositoryInterface;
 use App\Infrastructure\Repository\Eloquent\AbstractRepository as Repository;
 
+
 class DepartmentRepository extends Repository implements DepartmentRepositoryInterface
 {
 
