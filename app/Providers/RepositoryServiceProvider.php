@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -13,11 +14,9 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        list($cache, $db) = $this->provides();
+        $this->bindCacheableRepositories();
 
-        $this->bindCacheableRepositories($cache);
-
-        $this->bindRepositories($db);
+        $this->bindRepositories();
     }
 
     /**
@@ -30,23 +29,24 @@ class RepositoryServiceProvider extends ServiceProvider
         //
     }
 
-    public function provides()
+    public function provides(): Collection
     {
-        return [
-            config('repository.cache'),
-            config('repository.db')
-        ];
+        return collect([
+            "cacheable" => config('repository.cache'),
+            "db" => config('repository.db')
+        ]);
     }
 
-    private function bindCacheableRepositories(array $abstracts)
+    private function bindCacheableRepositories()
     {
-        foreach ($abstracts as $abstract => $concrete)
-            $this->app->singleton($abstract, $concrete);
+        foreach ($this->provides()->get('cacheable') as $abstract => $concrete)
+            $this->app
+                ->singleton($abstract, $concrete);
     }
 
-    private function bindRepositories(array $abstracts)
+    private function bindRepositories()
     {
-        foreach ($abstracts as $abstract => $concrete)
+        foreach ($this->provides()->get('db') as $abstract => $concrete)
             $this->app->bind($abstract, $concrete);
     }
 }
