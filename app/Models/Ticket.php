@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 
 /**
  * @method \Illuminate\Database\Eloquent\Builder fromCustomer()
@@ -41,18 +42,17 @@ class Ticket extends Model
         'satisfaction',
         'priority',
         'attached',
-        'seen'
+        'seen',
+        'must_close_at'
     ];
 
     protected $dateFormat = TIMESTAMP_FORMAT;
 
-    protected $dispatchesEvents = [
-        'created' => \App\Events\NewTicket::class
-    ];
+    protected $observables = ['responsed', 'seen'];
 
     protected static function booted()
     {
-        static::addGlobalScope(\App\Models\Scopes\OpenTickets::class);
+        static::addGlobalScope(new \App\Models\Scopes\OpenTickets);
     }
 
     protected static function newFactory()
@@ -119,6 +119,12 @@ class Ticket extends Model
     public function scopeSeen(Builder $query, bool $seen = false)
     {
         $query->where('seen', $seen);
+    }
+
+    public function scopeClosed(Builder $query)
+    {
+        $query->withoutGlobalScope(\App\Models\Scopes\OpenTickets::class)
+            ->where('must_close_at', '<=', Carbon::now(TIMEZONE));
     }
 
     public function scopeFromCustomer(Builder $query)

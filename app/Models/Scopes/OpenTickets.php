@@ -18,6 +18,12 @@ class OpenTickets implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where('must_close_at', '>', Carbon::now(TIMEZONE));
+
+        $builder->where('must_close_at');
+        // $builder->where('must_close_at', '>', Carbon::now(TIMEZONE))
+        //     ->orWhere(function (Builder $query) {
+        //         $query->where('must_close_at', '<=', Carbon::now(TIMEZONE))
+        //             ->whereHas('messages');
+        //     });
     }
 }

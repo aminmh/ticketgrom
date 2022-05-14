@@ -4,13 +4,10 @@ namespace App\Actions\Ticket;
 
 use App\DataTransferObjects\TicketDTO;
 use App\Http\Requests\TicketRequest;
-use App\Infrastructure\Traits\HasBcc;
-use App\Models\Ticket;
+use Illuminate\Support\Facades\Storage;
 
 class CreateNewTicket
 {
-
-    use HasBcc;
 
     public function __construct(
         private TicketRequest $request
@@ -19,18 +16,20 @@ class CreateNewTicket
 
     public function send()
     {
-        $data = TicketDTO::fromRequest($this->request);
+        try {
+            $data = TicketDTO::fromRequest($this->request);
 
-        $data->ticket->sender()->associate($data->ticketSender);
-        $data->ticket->department()->associate($data->department);
-        $data->ticket->inbox()->associate($data->inbox);
+            $data->ticket->sender()->associate($data->ticketSender);
+            $data->ticket->department()->associate($data->department);
+            $data->ticket->inbox()->associate($data->inbox);
 
-        $data->ticket->save();
-    }
+            $data->ticket->save();
+            
+        } catch (\Throwable $th) {
 
-    private function notifyToDepartmentMembers($members, Ticket $ticket)
-    {
+            Storage::delete($data->ticket->attached);
 
-        \Illuminate\Support\Facades\Notification::send($members, '');
+            throw $th;
+        }
     }
 }

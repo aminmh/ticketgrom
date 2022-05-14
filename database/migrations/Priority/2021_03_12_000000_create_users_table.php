@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('email', 50)->unique();
             $table->date('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('suspended')->default(false);
             $table->timestamps();
 
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');

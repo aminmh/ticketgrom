@@ -48,7 +48,9 @@ implements DepartmentRepositoryInterface, ObservableRepository
 
     public function refresh()
     {
-        $this->cached->forget(self::KEY);
+        // $this->cached->forget(self::KEY);
+
+        $this->cached->clear();
     }
 
     public function created()

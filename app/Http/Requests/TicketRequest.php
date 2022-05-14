@@ -42,7 +42,7 @@ class TicketRequest extends FormRequest
             'bcc' => 'nullable|array',
             'inboxId' => 'nullable|numeric',
             'priority' => 'in:none,low,medium,hight',
-            'attached' => 'nullable|file|mimes:png,jpg,txt',
+            'attached' => 'nullable|file|mimes:doc,docx,pdf,png,jpg',
         ];
     }
 }

@@ -79,6 +79,13 @@ class User extends Authenticatable
         return $this->belongsToMany(\App\Models\Department::class, 'department_members', 'user_id', 'department_id');
     }
 
+    public function suspend()
+    {
+        $this->update([
+            'suspended' => true
+        ]);
+    }
+
     protected static function newFactory()
     {
         return UserFactory::new();

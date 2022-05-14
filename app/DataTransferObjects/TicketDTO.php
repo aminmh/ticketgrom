@@ -2,7 +2,7 @@
 
 namespace App\DataTransferObjects;
 
-use App\Infrastructure\Contracts\DepartmentRepositoryInterface;
+use App\Infrastructure\Contracts\Repository\DepartmentRepositoryInterface;
 use App\Models\Department;
 use App\Models\Inbox;
 use App\Models\Ticket;
@@ -11,9 +11,9 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Spatie\DataTransferObject\DataTransferObject;
-
 
 class TicketDTO extends DataTransferObject
 {
@@ -38,7 +38,8 @@ class TicketDTO extends DataTransferObject
                 'priority' => $request->priority,
                 'attached' => $request->hasFile('attached')
                     ? static::saveAttached($request->file('attached'))
-                    : null
+                    : null,
+                'must_close_at' => Carbon::now(TIMEZONE)->addMinutes(15)
             ]),
             'inbox' => static::getInbox($request),
             'ticketSender' => $request->user() ?? User::find(1),
@@ -54,14 +55,11 @@ class TicketDTO extends DataTransferObject
     protected static function getInbox(Request $request)
     {
 
-        $department = static::getDepartment($request->department);
+        $inbox = Inbox::find($request?->inbox ??
+            static::getDepartment($request->department)
+            ->defaultInbox()->inbox_id);
 
-        $inboxId = $request?->inbox ?? $department->defaultInbox()->inbox_id;
-
-        if ($inboxId)
-            return Inbox::find($inboxId);
-
-        throw new ModelNotFoundException(__('messages.NOT_FOUND', ['subject' => 'صندوق دریافتی'], 'fa'));
+        return $inbox ?? throw new ModelNotFoundException(__('messages.NOT_FOUND', ['subject' => 'صندوق دریافتی'], 'fa'));
     }
 
     private static function saveAttached(UploadedFile $file)
