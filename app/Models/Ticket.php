@@ -139,4 +139,16 @@ class Ticket extends Model
     {
         return $this->messages();
     }
+
+    public function makePersistent()
+    {
+        $this->fireModelEvent('responsed', false);
+    }
+
+    public function makeTicketOpen(bool $infinite = false)
+    {
+        $this->update([
+            'must_close_at' => $infinite ? null : Carbon::now(TIMEZONE)->addMinutes(15)
+        ]);
+    }
 }

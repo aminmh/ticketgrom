@@ -14,6 +14,9 @@ class TicketObserver
 
     public function responsed(Ticket $ticket)
     {
+        $ticket->update([
+            'must_close_at' => null
+        ]);
     }
 
     public function seen(Ticket $ticket)

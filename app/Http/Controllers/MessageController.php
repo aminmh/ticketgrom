@@ -12,6 +12,8 @@ class MessageController extends Controller
 
             $newMessage->sendTo($ticket);
 
+            $ticket->makePersistent();
+
             return response()->json(json_message('SUCCESS', ['subject' => 'ارسال پیام']));
         } catch (\Throwable $th) {
 
@@ -44,7 +46,6 @@ class MessageController extends Controller
 
             return response()->json(['data' => $outbox]);
         } catch (\Throwable $th) {
-
         }
     }
 
@@ -55,7 +56,6 @@ class MessageController extends Controller
             $inbox = (auth()->user() ?? \App\Models\User::find(2))->messages()->get();
 
             return response()->json(['data' => $inbox]);
-
         } catch (\Throwable $th) {
 
             dd($th);
