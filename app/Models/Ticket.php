@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Expression;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+
+use function Illuminate\Events\queueable;
 
 /**
  * @method \Illuminate\Database\Eloquent\Builder fromCustomer()
@@ -39,10 +40,10 @@ class Ticket extends Model
         'bcc',
         'cc',
         'inbox_id',
-        'satisfaction',
         'priority',
         'attached',
         'seen',
+        'score',
         'must_close_at'
     ];
 
@@ -111,9 +112,9 @@ class Ticket extends Model
         );
     }
 
-    public function rank(): Attribute
+    public function score(): Attribute
     {
-        return Attribute::set(fn ($value) => $value <= 5.0 ? floatval($value) : null);
+        return Attribute::set(fn ($value) => floatval($value));
     }
 
     public function scopeSeen(Builder $query, bool $seen = false)
@@ -145,10 +146,8 @@ class Ticket extends Model
         $this->fireModelEvent('responsed', false);
     }
 
-    public function makeTicketOpen(bool $infinite = false)
+    public function changedStatus()
     {
-        $this->update([
-            'must_close_at' => $infinite ? null : Carbon::now(TIMEZONE)->addMinutes(15)
-        ]);
+        $this->fireModelEvent('updated', false);
     }
 }

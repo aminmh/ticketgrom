@@ -34,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         \App\Models\Ticket::observe(\App\Observers\TicketObserver::class);
+        \App\Models\User::observe(\App\Observers\UserObserver::class);
     }
 
     /**

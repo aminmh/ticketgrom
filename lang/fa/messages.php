@@ -9,5 +9,6 @@ return [
     "USER_ROLE_UNAUTHROZIED" => 'کاربر مورد نظر برای :subject مجاز نیست',
     "ACTIVATE_ACCOUNT" => "فعال سازی حساب کاربری",
     "INCORRECT_CREDENTILAS" => "نام کاربری یا گذرواژه اشتباه است",
-    "INVALID_SETTING" => "تنظیمات ارسال شده نامعتبر است"
+    "INVALID_SETTING" => "تنظیمات ارسال شده نامعتبر است",
+    "TICKET_CHANGED_STATUS" => "اولویت تیکت تغییر پیدا کرده است"
 ];

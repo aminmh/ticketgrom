@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Repository\Eloquent;
 
 use App\Infrastructure\Contracts\Repository\RepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 abstract class AbstractCacheRepository
 {
@@ -13,6 +14,8 @@ abstract class AbstractCacheRepository
         protected RepositoryInterface $repository,
     ) {
         $this->cached = app(\Illuminate\Cache\Repository::class);
+
+        Cache::
 
         $this->observe();
     }

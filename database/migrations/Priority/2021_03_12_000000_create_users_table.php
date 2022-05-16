@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('username', 50);
             $table->unsignedBigInteger('company_id');
             $table->string('email', 50)->unique();
+            $table->char('phone', 11)->unique();
             $table->date('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('suspended')->default(false);
