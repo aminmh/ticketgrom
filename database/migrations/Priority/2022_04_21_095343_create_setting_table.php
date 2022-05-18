@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('setting', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
+            $table->string('scope', 20);
             $table->json('setting');
 
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();

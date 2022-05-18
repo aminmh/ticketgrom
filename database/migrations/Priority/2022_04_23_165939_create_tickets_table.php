@@ -19,6 +19,7 @@ class CreateTicketsTable extends Migration
             $table->string('subject', 100);
             $table->unsignedBigInteger('user_id'); // customer (who is that send ticket)
             $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('to')->nullable();
             $table->unsignedTinyInteger('type');
             $table->unsignedTinyInteger('status');
             $table->string('bcc', 200)->nullable();
@@ -33,7 +34,7 @@ class CreateTicketsTable extends Migration
             $table->timestamps();
 
             $table->foreign('type')->references('id')->on('ticket_types')->cascadeOnDelete();
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign(['user_id','to'])->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('department_id')->references('id')->on('departments')->cascadeOnDelete();
             $table->foreign('inbox_id')->references('id')->on('inboxes')->cascadeOnDelete();
             $table->foreign('status')->references('id')->on('ticket_statuses')->cascadeOnDelete();

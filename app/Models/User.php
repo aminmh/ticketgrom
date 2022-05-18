@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\{HasApiTokens, PersonalAccessToken};
-use Modules\Setting\Model\Setting;
 use Spatie\Permission\Traits\{HasPermissions, HasRoles};
 
 class User extends Authenticatable

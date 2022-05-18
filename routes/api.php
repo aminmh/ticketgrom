@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Setting;
+use App\Models\Ticket;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +20,13 @@ use Illuminate\Support\Facades\Route;
 Route::any('test', function (Request $request) {
 
     try {
+        // assert($request->has('test'), new HttpResponseException(response()->json(["not ok"])));
+        Setting::upsert([
+            'user_id' => 1,
+            'scope' => "app_setting",
+            'setting' => json_encode($request->input('setting'))
+        ],['user_id'],['setting']);
+
     } catch (\Exception $th) {
         dd($th);
     }
@@ -37,9 +47,8 @@ Route::prefix('user')->group(function () {
         Route::post('add-to-favorite/{ticket}', [\App\Http\Controllers\TicketController::class, 'markAsFavorite']);
         Route::get('favorites', [\App\Http\Controllers\TicketController::class, 'favorites']);
         Route::get('outbox', [\App\Http\Controllers\TicketController::class, 'outbox']);
-        Route::prefix('rank')->group(function () {
-            Route::post('/{ticket}', [\App\Http\Controllers\TicketController::class, 'rank']);
-        });
+        Route::post('rate/{ticket}', [\App\Http\Controllers\TicketController::class, 'rate']);
+        Route::post('update/{ticket}', [\App\Http\Controllers\TicketController::class, 'update']);
     });
 
     Route::prefix('message')->group(function () {
@@ -49,17 +58,21 @@ Route::prefix('user')->group(function () {
 });
 
 Route::prefix('admin')->group(function () {
-    Route::post('create/role', [\App\Http\Controllers\AuthController::class, 'createRole']);
-    Route::prefix('grant')->group(function () {
+    Route::prefix('create')->group(function () {
+        Route::post('role', [\App\Http\Controllers\AuthController::class, 'createRole']);
+        Route::post('inbox/{department}', [\App\Http\Controllers\InboxController::class, 'store']);
+    });
 
+    Route::prefix('grant')->group(function () {
         Route::post('permission/to/role/{role}', [\App\Http\Controllers\AuthController::class, 'grantPermissionToRole']);
         Route::post('role/to/user/{user}', [\App\Http\Controllers\AuthController::class, 'grantRoleToUser']);
     });
 
-    Route::post('create/inbox/{department}', [\App\Http\Controllers\InboxController::class, 'store']);
+
     Route::post('/new/message/to/user/{user}', [\App\Http\Controllers\MessageController::class, 'sendToUser']);
 
     Route::prefix('setting')->group(function () {
-        Route::post('set', [\App\Http\Controllers\SettingController::class, 'store']);
+        Route::post('{scope}/store', [\App\Http\Controllers\SettingController::class, 'store'])
+            ->whereIn('scope', ['app_setting']);
     });
 });

@@ -2,10 +2,9 @@
 
 namespace App\Infrastructure\Repository\Eloquent;
 
-use App\Infrastructure\Contracts\Repository\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class AbstractRepository implements RepositoryInterface
+abstract class AbstractRepository
 {
 
     public function __construct(

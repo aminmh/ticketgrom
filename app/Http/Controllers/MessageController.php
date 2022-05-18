@@ -12,7 +12,7 @@ class MessageController extends Controller
 
             $newMessage->sendTo($ticket);
 
-            $ticket->makePersistent();
+            $ticket->responsed();
 
             return response()->json(json_message('SUCCESS', ['subject' => 'ارسال پیام']));
         } catch (\Throwable $th) {

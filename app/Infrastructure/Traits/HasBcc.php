@@ -11,11 +11,10 @@ trait HasBcc
     {
 
         return $ticket
-            ->replicate()->fill(array_merge($ticket->toArray(), [
+            ->replicate()->fill([
                 'cc' => [],
                 'bcc' => array_filter($ticket->bcc, fn ($email) => $email === $userEmail)
-            ]));
-
+            ]);
     }
 
     public function ticketHasBcc(Ticket $ticket): bool

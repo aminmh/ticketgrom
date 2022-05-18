@@ -10,7 +10,7 @@ class Setting extends Model
 
     protected $table = 'setting';
 
-    protected $fillable = ['user_id', 'setting', 'scope'];
+    protected $fillable = ['user_id', 'setting','scope'];
 
     public $timestamps = false;
 
@@ -20,5 +20,10 @@ class Setting extends Model
             get: fn ($setting) => json_decode($setting, true),
             set: fn ($value = []) => json_encode($value, JSON_PRETTY_PRINT)
         );
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

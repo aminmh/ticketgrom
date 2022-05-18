@@ -49,7 +49,7 @@ class Ticket extends Model
 
     protected $dateFormat = TIMESTAMP_FORMAT;
 
-    protected $observables = ['responsed', 'seen'];
+    // protected $observables = ['responsed', 'seen'];
 
     protected static function booted()
     {
@@ -141,13 +141,8 @@ class Ticket extends Model
         return $this->messages();
     }
 
-    public function makePersistent()
+    public function responsed()
     {
         $this->fireModelEvent('responsed', false);
-    }
-
-    public function changedStatus()
-    {
-        $this->fireModelEvent('updated', false);
     }
 }

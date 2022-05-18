@@ -14,6 +14,7 @@ trait HasFavorite
 
     public function markAsFavorite()
     {
-        (new \App\Models\Favorite)->favoritable()->associate($this)->save();
+        (new \App\Models\Favorite)->favoritable()
+            ->associate($this)->save();
     }
 }

@@ -19,7 +19,7 @@ class TicketUpdated
      *
      * @return void
      */
-    public function __construct(\App\Models\Ticket $ticket)
+    public function __construct(public \App\Models\Ticket $ticket)
     {
         //
     }
