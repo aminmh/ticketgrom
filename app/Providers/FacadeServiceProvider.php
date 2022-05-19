@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Infrastructure\Contracts\SmsSenderInterface;
-use App\Services\MeliPayamak;
+use App\Repositories\DB\Eloquent\AppSettingRepository;
 use Illuminate\Support\ServiceProvider;
 
 class FacadeServiceProvider extends ServiceProvider
@@ -15,9 +15,11 @@ class FacadeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('sms', $this->resolveProvider());
+        $this->app->bind('sms', $this->smsProvider());
 
-        $this->app->alias($this->resolveProvider(), SmsSenderInterface::class);
+        $this->app->bind("app_setting", AppSettingRepository::class);
+
+        $this->app->alias($this->smsProvider(), SmsSenderInterface::class);
     }
 
     /**
@@ -29,10 +31,10 @@ class FacadeServiceProvider extends ServiceProvider
     {
     }
 
-    private function resolveProvider()
+    private function smsProvider()
     {
-        return match (config('sms.default')) {
-            'melipayamak' => \App\Services\MeliPayamak::class,
-        };
+        $defaultProvider = config('sms.default');
+
+        return data_get(config('sms.providers')[$defaultProvider], 'service');
     }
 }

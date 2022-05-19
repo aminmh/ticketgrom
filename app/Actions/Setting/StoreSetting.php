@@ -5,7 +5,6 @@ namespace App\Actions\Setting;
 use App\Models\Setting;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
-use PHPUnit\Framework\Assert;
 
 class StoreSetting
 {
@@ -15,9 +14,9 @@ class StoreSetting
 
     public function save(string $scope)
     {
-        $setting = $this->user()->setting();
+        $setting = $this->user()->setting()->first();
 
-        if (!$setting->exists())
+        if (!$setting)
             $setting = new Setting();
 
         $setting->scope = $scope;

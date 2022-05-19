@@ -10,7 +10,11 @@ class Setting extends Model
 
     protected $table = 'setting';
 
-    protected $fillable = ['user_id', 'setting','scope'];
+    protected $fillable = ['user_id', 'setting', 'scope'];
+
+    public const APP_SETTING_SCOPE = "app_setting";
+
+    public const USER_SETTING_SCOPE = "user_setting";
 
     public $timestamps = false;
 

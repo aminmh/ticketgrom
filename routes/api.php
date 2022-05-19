@@ -1,5 +1,6 @@
 <?php
 
+use App\Infrastructure\Facades\AppSettingFacade as AppSetting;
 use App\Models\Setting;
 use App\Models\Ticket;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -20,12 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::any('test', function (Request $request) {
 
     try {
-        // assert($request->has('test'), new HttpResponseException(response()->json(["not ok"])));
-        Setting::upsert([
-            'user_id' => 1,
-            'scope' => "app_setting",
-            'setting' => json_encode($request->input('setting'))
-        ],['user_id'],['setting']);
+
+        return AppSetting::ticketNotifications("");
 
     } catch (\Exception $th) {
         dd($th);

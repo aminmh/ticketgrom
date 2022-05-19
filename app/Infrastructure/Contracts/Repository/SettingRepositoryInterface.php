@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Contracts\Repository;
 
+use App\Repositories\{TicketNotificationSetting, TicketEvents};
+
 interface SettingRepositoryInterface
 {
 
@@ -9,7 +11,7 @@ interface SettingRepositoryInterface
 
     public function allowedFileTypeUpload(): array;
 
-    public function ticketNotifications(string $key);
+    public function ticketNotifications(TicketEvents $event, TicketNotificationSetting $key, ?\App\Models\User $for);
 
     public function maxTimeOutTicketResponse();
 
