@@ -31,16 +31,4 @@ class UpdateTicket
 
         $modified->save();
     }
-
-    public function changeDepartment(Ticket $ticket)
-    {
-        $newDepartmentId = $this->request->input('department');
-
-        $newStatus = $this->request->input('status');
-
-        $ticket->department_id = $newDepartmentId;
-        $ticket->status = $newStatus;
-
-        $ticket->save();
-    }
 }

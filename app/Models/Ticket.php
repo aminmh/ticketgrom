@@ -49,7 +49,15 @@ class Ticket extends Model
 
     protected $dateFormat = TIMESTAMP_FORMAT;
 
-    // protected $observables = ['responsed', 'seen'];
+    protected $observables = ['responsed'];
+
+    protected $dispatchesEvents = [
+        'created' => \App\Events\NewTicket::class
+    ];
+
+    protected $attributes = [
+        'priority' => 0
+    ];
 
     protected static function booted()
     {
@@ -76,22 +84,20 @@ class Ticket extends Model
         return $this->belongsTo(Department::class, 'department_id');
     }
 
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status');
+    }
+
     protected function priority(): Attribute
     {
-        return Attribute::make(
+        return Attribute::get(
             get: fn ($value) => match ($value) {
                 0 => 'none',
                 1 => 'low',
                 2 => 'medium',
                 3 => 'hight',
                 default => 'none'
-            },
-            set: fn ($newValue) => match ($newValue) {
-                'none' => 0,
-                'low' => 1,
-                'medium' => 2,
-                'hight' => 3,
-                default => 0
             }
         );
     }

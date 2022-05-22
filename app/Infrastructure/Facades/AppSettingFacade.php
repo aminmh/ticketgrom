@@ -3,13 +3,14 @@
 namespace App\Infrastructure\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use App\Repositories\{TicketNotificationSetting, TicketEvents};
+use App\Models\User;
 
 /**
  * @method static int maxAuthenticateRateLimiter()
  * @method static int maxFileUploadSize()
  * @method static int maxTimeOutTicketResponse()
  * @method static int maxTimeOutTicketResponse()
- * @method static mixed ticketNotifications($event, \App\Repositories\NotificationSetting $key, ?\App\Models\User $for = null)
  * @method static array allowedFileTypeUpload()
  *
  * @see \App\Repositories\DB\Eloquent\AppSettingRepository

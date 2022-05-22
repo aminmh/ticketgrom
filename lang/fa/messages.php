@@ -10,5 +10,6 @@ return [
     "ACTIVATE_ACCOUNT" => "فعال سازی حساب کاربری",
     "INCORRECT_CREDENTILAS" => "نام کاربری یا گذرواژه اشتباه است",
     "INVALID_SETTING" => "تنظیمات ارسال شده نامعتبر است",
-    "TICKET_CHANGED_STATUS" => "اولویت تیکت تغییر پیدا کرده است"
+    "TICKET_CHANGED_PRIORITY_TITLE" => "تغییر در اولویت تیکت",
+    "TICKET_CHANGED_PRIORITY_MESSAGE" => "اولویت تیکت :ID از :old به :new تغییر یافت",
 ];

@@ -18,11 +18,9 @@ class CreateMessagesTable extends Migration
             $table->text('message');
             $table->morphs('send_to');
             $table->unsignedBigInteger('user_id'); // who is that response to ticket
-            $table->unsignedTinyInteger('status_id');
             $table->boolean('seen')->default(false);
             $table->timestamps();
-
-            $table->foreign('status_id')->references('id')->on('ticket_statuses')->onDelete('cascade');
+            
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

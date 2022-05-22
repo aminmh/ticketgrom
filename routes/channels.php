@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Broadcast;
 */
 
 Broadcast::channel('tickets.inbox.{inboxId}', function ($user, int $inboxId) {
-    return Auth::check() && in_array($inboxId, Auth::user()->inboxes()->get()->pluck('id')->toArray());
+    return Auth::check() && in_array($inboxId, Auth::user()->inboxes()->get()->pluck('id'));
 });
 
 Broadcast::channel('message.for.me.{userId}', function ($user, int $userId) {

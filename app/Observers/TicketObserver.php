@@ -2,52 +2,29 @@
 
 namespace App\Observers;
 
-use App\Events\NewTicket;
-use App\Events\TicketUpdated;
 use App\Infrastructure\Contracts\Repository\UserRepositoryInterface;
 use App\Models\Ticket;
-use App\Notifications\NewTicketNotification;
+use App\Notifications\TicketChangedPriorityNotification;
 use Illuminate\Support\Facades\Notification;
 
 class TicketObserver
 {
-    public function created(Ticket $ticket)
-    {
-        $department = $ticket->department()->first();
-
-        $userRepository = app(UserRepositoryInterface::class);
-
-        Notification::channel('database')
-            ->send($department, (new NewTicketNotification($ticket->replicate(['cc', 'bcc']))));
-
-        $ccMembers = $userRepository->findByEmail($ticket->cc);
-
-        $bccMembers = $userRepository->findByEmail($ticket->bcc);
-
-        $departmentMembers = $department->members()->get();
-
-        Notification::send($ccMembers, new NewTicketNotification($ticket));
-
-        $bccMembers->each(function ($user) use ($ticket) {
-            $user
-                ->notify((new NewTicketNotification(
-                    $ticket
-                        ->replicate(['cc'])
-                        ->fill([
-                            'bcc' => array_filter($ticket->bcc, fn ($email) => $user->email == $email)
-                        ])
-                ))->onChannels(['']));
-        });
-
-        Notification::send($departmentMembers);
-    }
 
     public function updated(Ticket $ticket)
     {
-        $orginal = $ticket->getOriginal();
 
-        // if($ticket->wasChanged('status'))
+        if ($ticket->wasChanged('priority')) {
 
+            Notification::send(
+                notifiables: $ticket
+                    ->department()->first()
+                    ->members()->get(),
+                notification: new TicketChangedPriorityNotification($ticket)
+            );
+        }
+
+        if ($ticket->wasChanged('department_id'))
+            event(new \App\Events\NewTicket($ticket));
     }
 
     public function responsed(Ticket $ticket)

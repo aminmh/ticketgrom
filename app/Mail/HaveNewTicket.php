@@ -18,8 +18,6 @@ class HaveNewTicket extends Mailable
      */
     public function __construct(protected \App\Models\Ticket $ticket)
     {
-        $this->bcc($ticket->bcc);
-        $this->cc($ticket->cc);
     }
 
     /**

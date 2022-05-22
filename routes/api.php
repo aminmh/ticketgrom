@@ -3,6 +3,9 @@
 use App\Infrastructure\Facades\AppSettingFacade as AppSetting;
 use App\Models\Setting;
 use App\Models\Ticket;
+use App\Models\User;
+use App\Repositories\TicketEvents;
+use App\Repositories\TicketNotificationSetting;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,8 +25,11 @@ Route::any('test', function (Request $request) {
 
     try {
 
-        return AppSetting::ticketNotifications("");
+        $ticket = \App\Models\Ticket::find(3);
 
+        $ticket->priority = 1;
+
+        $ticket->save();
     } catch (\Exception $th) {
         dd($th);
     }

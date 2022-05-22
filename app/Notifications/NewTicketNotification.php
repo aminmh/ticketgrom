@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
 
+use function PHPUnit\Framework\callback;
+
 class NewTicketNotification extends Notification
 {
     // use Queueable;
@@ -33,12 +35,7 @@ class NewTicketNotification extends Notification
      */
     public function via($notifiable)
     {
-        if (count($this->channels))
-            return $this->channels;
-
-        return $notifiable instanceof \App\Models\User
-            ? ['mail', 'broadcast']
-            : ['database'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -49,7 +46,11 @@ class NewTicketNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new \App\Mail\HaveNewTicket($this->data))
+        $ticket = $this->data;
+
+        return (new \App\Mail\HaveNewTicket($ticket))
+            ->cc($ticket->cc)
+            ->bcc($ticket->bcc)
             ->send($notifiable);
     }
 
@@ -61,14 +62,21 @@ class NewTicketNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $ticket = $this->data;
+
         return [
-            'ticket' => $this->data->toArray()
+            'text' => $ticket->text,
+            'subject' => $ticket->subject,
+            'status' => $ticket->status()->first()->status,
+            'priority' => $ticket->priority
         ];
     }
 
     public function broadcastOn()
     {
-        return [new PrivateChannel("tickets.inbox." . $this->data->inbox_id)];
+        return [
+            new PrivateChannel("tickets.inbox." . $this->data->inbox_id)
+        ];
     }
 
     public function broadcastType()

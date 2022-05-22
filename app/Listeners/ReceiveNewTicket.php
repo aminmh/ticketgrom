@@ -5,10 +5,10 @@ namespace App\Listeners;
 use App\Infrastructure\Contracts\Repository\UserRepositoryInterface;
 use App\Notifications\NewTicketNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Notification;
-use PhpParser\Node\Expr\New_;
+use Illuminate\Support\Facades\Notification as NotificationFacades;
 
 class ReceiveNewTicket
 {
@@ -17,7 +17,9 @@ class ReceiveNewTicket
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        protected UserRepositoryInterface $userRepository
+    )
     {
         //
     }
@@ -34,38 +36,46 @@ class ReceiveNewTicket
 
         $department = $ticket->department()->first();
 
-        Notification::channel('database')
-            ->send($department, (new NewTicketNotification($ticket->replicate(['cc', 'bcc']))));
+        $ccMembers = $this->userRepository->findByEmail($ticket->cc);
 
-        // $department->notify(
-        //     (new NewTicketNotification($ticket->replicate(['cc', 'bcc'])))
-        //         ->onChannels('database')
-        // );
+        $bccMembers = $this->userRepository->findByEmail($ticket->bcc);
 
-        $ccMembers = $this->userRepository()->findByEmail($ticket->cc);
+        $this->notify(
+            notifiable: $department,
+            notification: new NewTicketNotification($ticket->replicate(['cc', 'bcc'])),
+            channel: 'database'
+        );
 
-        Notification::send($ccMembers, new NewTicketNotification($ticket));
+        $this->notify(
+            notifiable: $ccMembers,
+            notification: new NewTicketNotification($ticket),
+            channel: 'mail'
+        );
 
-        $bccMembers = $this->userRepository()->findByEmail($ticket->bcc);
+        $this->notify(
+            notifiable: $department->members()->get(),
+            notification: new NewTicketNotification($ticket)
+        );
 
-        collect($bccMembers)->each(function (\App\Models\User $user) use ($ticket) {
-            $user
-                ->notify((new NewTicketNotification(
-                    $ticket
-                        ->replicate(['cc'])
-                        ->fill([
-                            'bcc' => array_filter($ticket->bcc, fn ($email) => $user->email == $email)
-                        ])
-                ))->onChannels(['']));
-        });
+        $bccMembers->each(fn ($user) => $this
+            ->notify(
+                notifiable: $user,
+                notification: new NewTicketNotification($ticket->replicate(['cc'])->fill([
+                    'bcc' => array_filter(
+                        array: array_unique($ticket->bcc),
+                        callback: fn ($email) => $user->email == $email
+                    )
 
-        $departmentMembers = $department->members()->get();
-
-        Notification::send($departmentMembers);
+                ])),
+                channel: 'mail'
+            ));
     }
 
-    public function userRepository(): UserRepositoryInterface
+    private function notify($notifiable, Notification $notification, ?string $channel = null)
     {
-        return app(UserRepositoryInterface::class);
+        if ($channel)
+            return NotificationFacades::channel($channel)->send($notifiable, $notification);
+
+        return NotificationFacades::send($notifiable, $notification);
     }
 }
