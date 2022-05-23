@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Department\CreateDepartment;
 use App\Actions\User\DepartmentMembership;
 use App\Models\Department;
 use App\Models\User;
@@ -10,6 +11,30 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class DepartmentController extends Controller
 {
+
+    public function store(CreateDepartment $createDepartment)
+    {
+        try {
+
+            $createDepartment->create();
+
+            return response()->json(json_message('SUCCESS'));
+        } catch (\Throwable $th) {
+        }
+    }
+
+    public function storeWithUsers(CreateDepartment $createDepartment)
+    {
+        try {
+
+            $createDepartment->createFromUsers();
+            
+        } catch (\Throwable $th) {
+
+            dd($th);
+        }
+    }
+
     public function membership(DepartmentMembership $membership, Department $department, ?User $user = null)
     {
         try {

@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Faker\Provider\fa_IR\PhoneNumber;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -26,6 +27,7 @@ class UserFactory extends Factory
             'company_id' => Company::factory(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'phone' => PhoneNumber::mobileNumber(),
             'password' => Hash::make('12345678'), // password
         ];
     }

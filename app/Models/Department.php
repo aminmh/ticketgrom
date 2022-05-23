@@ -22,6 +22,10 @@ class Department extends Model
         'created' => \App\Events\NewDepartment::class
     ];
 
+    protected $attributes = [
+        'visible_for_customers' => true
+    ];
+
     public function members()
     {
         return $this->belongsToMany(User::class, 'department_members', 'department_id', 'user_id');

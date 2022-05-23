@@ -71,6 +71,12 @@ Route::prefix('admin')->group(function () {
         Route::post('role/to/user/{user}', [\App\Http\Controllers\AuthController::class, 'grantRoleToUser']);
     });
 
+    Route::prefix('department')->group(function () {
+        Route::post('new', [\App\Http\Controllers\DepartmentController::class, 'store']);
+        Route::post('new/with-users', [\App\Http\Controllers\DepartmentController::class, 'storeWithUsers']);
+        Route::post('{department}/join/{user?}', [\App\Http\Controllers\DepartmentController::class, 'membership']);
+        Route::post('{department}/discontinue-membership', [\App\Http\Controllers\DepartmentController::class, 'discontinueMembership']);
+    });
 
     Route::post('/new/message/to/user/{user}', [\App\Http\Controllers\MessageController::class, 'sendToUser']);
 
