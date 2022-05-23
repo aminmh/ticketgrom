@@ -12,4 +12,6 @@ return [
     "INVALID_SETTING" => "تنظیمات ارسال شده نامعتبر است",
     "TICKET_CHANGED_PRIORITY_TITLE" => "تغییر در اولویت تیکت",
     "TICKET_CHANGED_PRIORITY_MESSAGE" => "اولویت تیکت :ID از :old به :new تغییر یافت",
+    "USER_SUSPENDED" => "کاربر :username حساب کاربری شما به حالت تعلیق درآمده است",
+    "PLEASE_INTRODUCE_MEMBERSHIPS" => "لطفا اعضای :subject را مشخص کنید"
 ];

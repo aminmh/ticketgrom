@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Infrastructure\Contracts\Repository\UserRepositoryInterface;
 use App\Models\Ticket;
 use App\Notifications\TicketChangedPriorityNotification;
 use Illuminate\Support\Facades\Notification;
@@ -32,14 +31,5 @@ class TicketObserver
         $ticket->update([
             'must_close_at' => null
         ]);
-    }
-
-    public function seen(Ticket $ticket)
-    {
-    }
-
-    private function userRepository(): UserRepositoryInterface
-    {
-        return app(UserRepositoryInterface::class);
     }
 }

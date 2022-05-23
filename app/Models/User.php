@@ -36,6 +36,8 @@ class User extends Authenticatable
         'last_name',
         'username',
         'email',
+        'photo',
+        'phone',
         'password',
     ];
 
@@ -57,6 +59,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $with = ['roles', 'permissions'];
+
+    protected $observables = ['suspended', 'discontinueMembership'];
 
     public function tickets()
     {
@@ -85,9 +91,12 @@ class User extends Authenticatable
 
     public function suspend()
     {
-        $this->update([
-            'suspended' => true
-        ]);
+        $this->fireModelEvent('suspended');
+    }
+
+    public function discontinueMembership()
+    {
+        $this->fireModelEvent('discontinueMembership');
     }
 
     protected static function newFactory()

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -14,8 +15,12 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('tickets.inbox.{inboxId}', function ($user, int $inboxId) {
-    return Auth::check() && in_array($inboxId, Auth::user()->inboxes()->get()->pluck('id'));
+Broadcast::channel('department.{department}.tickets', function ($user, Department $department) {
+    return Auth::check();
+});
+
+Broadcast::channel('department.{department}.ticket.updates', function ($user, Department $department) {
+    return Auth::check() && in_array(Auth::user()->id, $department->members()->get()->pluck('id')->toArray());
 });
 
 Broadcast::channel('message.for.me.{userId}', function ($user, int $userId) {

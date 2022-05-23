@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Status;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -41,6 +42,18 @@ class TicketChangedPriorityNotification extends Notification
      */
     public function toMail($notifiable)
     {
+    }
+
+    public function broadcastOn()
+    {
+        return [
+            new PrivateChannel('department.' . $this->ticket->department_id . 'ticket.updates')
+        ];
+    }
+
+    public function broadcastType()
+    {
+        return "ticket.update";
     }
 
     /**

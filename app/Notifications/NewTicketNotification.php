@@ -75,7 +75,7 @@ class NewTicketNotification extends Notification
     public function broadcastOn()
     {
         return [
-            new PrivateChannel("tickets.inbox." . $this->data->inbox_id)
+            new PrivateChannel('department.' . $this->ticket->department_id . 'tickets')
         ];
     }
 
